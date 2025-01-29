@@ -2,6 +2,7 @@ import connectDB from './DB/dbConnection.js';
 import errorHandler from './middlewares/errorhandlerMiddleware.js';
 import taskRoutes from './modules/task/task.controller.js';
 import employeeRoutes from './modules/employee/employee.controller.js';
+
 function bootstrap(app, express) {
     connectDB();  // Use the default imported connectDB function
     app.use(express.json());
