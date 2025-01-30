@@ -1,157 +1,105 @@
-Daily Task Backend
-This is the backend API for the Daily Task application, built with Node.js and Express. The backend provides CRUD operations for managing daily tasks and employees, along with user authentication via JWT. The backend is connected to a MongoDB database for data persistence.
+# Daily Task Backend API
 
-Table of Contents
-Technologies
-Installation
-Environment Variables
-API Endpoints
-Postman Documentation
-Running the Project
-Error Handling
-Contributing
-License
-Technologies
-Node.js - JavaScript runtime for server-side logic
-Express - Web framework for handling API routes
-MongoDB - NoSQL database for storing tasks and employee data
-Mongoose - ODM for interacting with MongoDB
-bcrypt - Password hashing library
-cors - Middleware for enabling CORS
-dotenv - Loads environment variables from a .env file
-express-async-handler - Middleware for handling asynchronous requests
-joi - Schema validation for input data
-jsonwebtoken (JWT) - Authentication via JSON Web Tokens
-nodemon - Tool for automatically restarting the server during development
-Installation
-To set up the project locally, follow these steps:
+This is the backend for the **Daily Task Manager** application, which allows users to manage daily tasks and employees. It provides CRUD operations for managing tasks and employee data. Built with **Node.js**, **Express**, and connected to **MongoDB** for data storage.
 
-Clone the repository:
+## Table of Contents
 
-bash
-Copy
-Edit
-git clone https://github.com/beshoynasryz/dailyTask-backend.git
-Navigate into the project directory:
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+- [Postman Documentation](#postman-documentation)
+- [Running the Project](#running-the-project)
+- [Error Handling](#error-handling)
+- [Contributing](#contributing)
+- [License](#license)
 
-bash
-Copy
-Edit
-cd dailyTask-backend
-Install dependencies:
+## Technologies
 
-bash
-Copy
-Edit
-npm install
-Environment Variables
-Create a .env file in the root of your project and add the following:
+- **Node.js** and **Express** for backend development.
+- **MongoDB** for database management.
+- **Mongoose** for interacting with MongoDB.
+- **JWT** (JSON Web Tokens) for user authentication.
+- **Bcrypt** for hashing passwords.
+- **Joi** for input validation.
+- **CORS** for handling cross-origin requests.
+- **Nodemon** for automatic server restart in development.
 
-env
-Copy
-Edit
-PORT=8000
-DB_URI=mongodb://localhost:27017/dailyTask
-JWT_SECRET=your-secret-key
-PORT: The port your application will run on.
-DB_URI: The connection string for your MongoDB database.
-JWT_SECRET: A secret key for signing JWT tokens.
-API Endpoints
-Employee Endpoints
-GET /api/employee
-Retrieves a list of all employees.
+## Installation
 
-POST /api/employee
-Creates a new employee.
-Example request body:
+To set up the backend locally, follow these steps:
 
-json
-Copy
-Edit
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "role": "developer",
-  "password": "password123"
-}
-PUT /api/employee/:id
-Updates an existing employee's details.
-Example request body:
+1. Clone the repository:
 
-json
-Copy
-Edit
-{
-  "name": "John Doe Updated",
-  "role": "senior developer"
-}
-DELETE /api/employee/:id
-Deletes an employee by ID.
+    ```bash
+    git clone https://github.com/beshoynasryz/dailyTask-backend.git
+    ```
 
-Task Endpoints
-GET /api/task
-Retrieves a list of all tasks.
+2. Navigate to the project folder:
 
-POST /api/task
-Creates a new task.
-Example request body:
+    ```bash
+    cd dailyTask-backend
+    ```
 
-json
-Copy
-Edit
-{
-  "title": "Task Title",
-  "description": "Task Description",
-  "status": "pending",
-  "assignedTo": "employeeId"
-}
-PUT /api/task/:id
-Updates an existing task.
-Example request body:
+3. Install the required dependencies:
 
-json
-Copy
-Edit
-{
-  "status": "completed"
-}
-DELETE /api/task/:id
-Deletes a task by ID.
+    ```bash
+    npm install
+    ```
 
-Authentication (Optional)
-POST /api/login
-Logs in a user and returns a JWT token for authentication.
-Example request body:
+4. Set up the environment variables by creating a `.env` file in the root directory with the following contents:
 
-json
-Copy
-Edit
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-Postman Documentation
-You can test the API using Postman. The full API documentation can be found here.
+    ```env
+    PORT=8000
+    DB_URI=mongodb://localhost:27017/dailyTask
+    JWT_SECRET=your-jwt-secret-key
+    ```
 
-Running the Project
-To start the project in development mode:
+    - `PORT` - The port the server will listen to.
+    - `DB_URI` - MongoDB URI for connecting to the database.
+    - `JWT_SECRET` - Secret key used for signing JWT tokens.
 
-bash
-Copy
-Edit
-npm run dev
-This will run the server with nodemon, automatically restarting the server when files are modified.
+## API Endpoints
 
-Available Scripts
-npm start: Starts the server in production mode.
-npm run dev: Starts the server in development mode with auto-reloading.
-Error Handling
-The backend uses a custom error handler to catch and manage errors. All errors will be caught and responded to in the following format:
+### Employee Endpoints
 
-json
-Copy
-Edit
-{
-  "message": "Error message",
-  "error": "Error description"
-}
+- **GET** `/api/employee`  
+  Retrieve a list of all employees.
+
+- **POST** `/api/employee`  
+  Create a new employee.
+
+- **PUT** `/api/employee/:id`  
+  Update an existing employee's data.
+
+- **DELETE** `/api/employee/:id`  
+  Delete an employee by ID.
+
+### Task Endpoints
+
+- **GET** `/api/task`  
+  Retrieve a list of all tasks.
+
+- **POST** `/api/task`  
+  Create a new task.
+
+- **PUT** `/api/task/:id`  
+  Update a task's data.
+
+- **DELETE** `/api/task/:id`  
+  Delete a task by ID.
+
+### Authentication (Optional)
+
+- **POST** `/api/login`  
+  Login and receive a JWT token.
+
+  Example request body:
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "password123"
+  }
+
+For a full list of API endpoints, you can view the Postman documentation here.
+https://documenter.getpostman.com/view/36781028/2sAYX2Lie9
