@@ -69,28 +69,6 @@ export const createTask = AsyncHandler(async (req, res, next) => {
         remainingHours: (remainingHours - taskDuration).toFixed(2) // Remaining hours after the new task
     });
 });
-// Controller for getting tasks of a specific employee
-export const getTasks = AsyncHandler(async (req, res, next) => {
-    const { employeeId } = req.params;
-    
-    // Fetch all tasks for the employee
-    const tasks = await Task.find({ employee: employeeId });
-    if (!tasks || tasks.length === 0) {
-        return res.status(404).json({ message: 'No tasks found for this employee' });
-    }
-
-    // Calculate the total hours worked for all tasks
-    const totalHours = tasks.reduce((acc, task) => {
-        const taskStart = new Date(task.from);
-        const taskEnd = new Date(task.to);
-        return acc + (taskEnd - taskStart) / (1000 * 60 * 60); // Task duration in hours
-    }, 0);
-
-    res.status(200).json({
-        totalHours,
-        tasks
-    });
-});
 
 
 // Controller for updating a task
@@ -212,4 +190,28 @@ export const getDailySummary =AsyncHandler( async (req, res) => {
         });
    
 })
+
+export const getTasks = AsyncHandler(async (req, res, next) => {
+    const { employeeId } = req.params;
+    
+    // Fetch all tasks for the employee
+    const tasks = await Task.find({ employee: employeeId });
+    if (!tasks || tasks.length === 0) {
+        return res.status(404).json({ message: 'No tasks found for this employee' });
+    }
+
+    // Calculate the total hours worked for all tasks
+    const totalHours = tasks.reduce((acc, task) => {
+        const taskStart = new Date(task.from);
+        const taskEnd = new Date(task.to);
+        return acc + (taskEnd - taskStart) / (1000 * 60 * 60); // Task duration in hours
+    }, 0);
+
+    res.status(200).json({
+        totalHours,
+        tasks
+
+    })
+}); 
+
 
