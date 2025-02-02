@@ -6,17 +6,18 @@ import {
     deleteTask,
     getDailySummary
 } from './task.service.js';
-
+import validate from '../../middlewares/validationMiddleware.js';
+import { taskValidationRules } from './task.validation.js';
 const taskRouter = express.Router();
 
 // Route for creating a new task
-taskRouter.post('/', createTask);
+taskRouter.post('/',validate(taskValidationRules) , createTask);
 
 // Route for getting all tasks of a specific employee
 taskRouter.get('/:employeeId', getTasks);
 
 // Route for updating a task
-taskRouter.put('/:taskId', updateTask);
+taskRouter.put('/:taskId',validate(taskValidationRules) , updateTask);
 
 // Route for deleting a task
 taskRouter.delete('/:taskId', deleteTask);

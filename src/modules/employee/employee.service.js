@@ -2,17 +2,16 @@ import Employee from '../employee/employee.model.js';
 import Task from '../task/task.model.js';
 import AsyncHandler from 'express-async-handler';
 
-// Controller for creating a new employee
+
 export const createEmployee = AsyncHandler(async (req, res) => {
     const { name } = req.body;
 
-    // Create a new employee
     const employee = new Employee({ name });
     await employee.save();
     res.status(201).json(employee);
 });
 
-// Controller for getting all employees and their tasks
+
 export const getEmployees = AsyncHandler(async (req, res) => {
     const employees = await Employee.find();
 
@@ -31,7 +30,6 @@ export const getEmployees = AsyncHandler(async (req, res) => {
     res.status(200).json(employeesWithTasks);
 });
 
-// Controller for getting a specific employee with their tasks
 export const getEmployeeById = AsyncHandler(async (req, res) => {
     const { employeeId } = req.params;
 
@@ -46,7 +44,6 @@ export const getEmployeeById = AsyncHandler(async (req, res) => {
     res.status(200).json({ ...employee.toObject(), tasks });
 });
 
-// Controller for updating an employee's details
 export const updateEmployee = AsyncHandler(async (req, res) => {
     const { employeeId } = req.params;
     const { name } = req.body;
@@ -63,7 +60,7 @@ export const updateEmployee = AsyncHandler(async (req, res) => {
     res.status(200).json(employee);
 });
 
-// Controller for deleting an employee
+
 export const deleteEmployee = AsyncHandler(async (req, res) => {
     const { employeeId } = req.params;
 
@@ -72,10 +69,10 @@ export const deleteEmployee = AsyncHandler(async (req, res) => {
         return res.status(404).json({ message: 'Employee not found' });
     }
 
-    // Delete all tasks related to the employee
+   
     await Task.deleteMany({ employee: employeeId });
 
-    // Delete employee
+    
     await employee.deleteOne();
     res.status(200).json({ message: 'Employee deleted successfully' });
 });

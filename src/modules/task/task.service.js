@@ -31,6 +31,7 @@ export const createTask = AsyncHandler(async (req, res, next) => {
         from: { $gte: startOfDay, $lte: endOfDay }
     });
 
+
     // Calculate total hours already worked on the same day
     const totalHours = existingTasks.reduce((acc, task) => {
         const taskStart = new Date(task.from);
@@ -111,21 +112,38 @@ export const updateTask = AsyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Task duration cannot exceed 8 hours' });
     }
 
-    // Get the start and end of the day for the given 'from' date
-    const startOfDay = new Date(from).setHours(0, 0, 0, 0);
-    const endOfDay = new Date(from).setHours(23, 59, 59, 999);
+    // Convert to Date objects for comparison
+    const newStart = new Date(from);
+    const newEnd = new Date(to);
+
+    // Check for overlapping tasks (excluding the task being updated)
+    const overlappingTasks = await Task.findOne({
+        employee: employeeId,
+        _id: { $ne: taskId }, // Exclude the current task
+        $or: [
+            { from: { $lt: newEnd }, to: { $gt: newStart } } // Overlaps with the new time
+        ]
+    });
+
+    if (overlappingTasks) {
+        return res.status(400).json({ message: 'This time slot is already taken by another task' });
+    }
 
     // Fetch all tasks for the employee on the same day
+    const startOfDay = new Date(newStart).setHours(0, 0, 0, 0);
+    const endOfDay = new Date(newStart).setHours(23, 59, 59, 999);
+    
     const existingTasks = await Task.find({
         employee: employeeId,
         from: { $gte: startOfDay, $lte: endOfDay }
     });
 
-    // Calculate total hours worked for the employee on that day
-    const totalHours = existingTasks.reduce((acc, task) => {
-        const taskStart = new Date(task.from);
-        const taskEnd = new Date(task.to);
-        return acc + (taskEnd - taskStart) / (1000 * 60 * 60); // Task duration in hours
+    // Calculate total hours worked (excluding the old task duration)
+    const totalHours = existingTasks.reduce((acc, t) => {
+        if (t._id.toString() !== taskId) {
+            return acc + (new Date(t.to) - new Date(t.from)) / (1000 * 60 * 60);
+        }
+        return acc;
     }, 0);
 
     // Check if the total hours plus the updated task duration exceed 8 hours
@@ -194,3 +212,4 @@ export const getDailySummary =AsyncHandler( async (req, res) => {
         });
    
 })
+
